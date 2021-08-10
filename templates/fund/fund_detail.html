@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'fund/fund.css' %}">
+{% endblock %}
+{% block contents %}
+{% load custom_filter %}
+{% load extra_filter %}
+{# flush message #}
+{% if messages %}
+    <div class="alert alert-dismissable" role="alert">
+        {% for message in messages %}
+            <div class="text-center {% if message.tags %}{{ message.tags }}
+            {% endif %} message">
+            <span class="text-center">{{ message }}</span>
+        {% endfor %}
+        </div>
+    </div>
+{% endif %}
+<section class="container">
+    <div class="d-flex  align-items-center  mt-5 border-bottom">
+    <h1 class="h2">{{ fund_obj.fund_name }}</h1>
+    <button onclick="$('#modal-overlay').fadeIn()" class="btn btn-primary primary_color white_color_text my-1 btn-pad">ポートフォリオに追加</button>
+</div>
+    <div class="row mt-2 mb-2">
+    </div>
+    <div class="">
+        <h3 class="primary_color">直近1年、または3年の価格変動</h3>
+    </div>
+    <div class="row mb-3">
+        <div class="col container">
+            <iframe class="justify-content-center" marginwidth="0" scrolling="no" width="552" height="465"
+                    src="{{ fund_chart_src }}"></iframe>
+        </div>
+        <div class="col">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h3 class="primary_color">ファンドの特色</h3>
+                        <hr>
+                        <div class="col">
+                            <p>{{ fund_feature_text }}</p>
+                        </div>
+                        <div>
+                            <h3 class="primary_color">パフォーマンス</h3>
+                            <hr>
+                            <div>
+                                <table class="table">
+                                    <thead>
+                                        <tr class="table-active">
+                                            <th scope="col">年</th>
+                                            <th scope="col">1年</th>
+                                            <th scope="col">3年(年率)</th>
+                                            <th scope="col">5年(年率)</th>
+                                            <th scope="col">10年(年率)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                         <tr>
+                                            <th scope="row">リターン</th>
+                                            {% for return in returns %}
+                                                {% if return|is_minus %}
+                                                    <td><p class="text-danger">{{ return }}</p></td>
+                                                {% else %}
+                                                <td>{{ return }}</td>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">リスク</th>
+                                            {% for risk in risks %}
+                                                {% if risk|is_minus %}
+                                                    <td><p class="text-danger">{{ risk }}</p></td>
+                                                {% else %}
+                                                    <td>{{ risk }}</td>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="row">
+    {% comment %} リスクが類似している銘柄情報一覧 {% endcomment %}
+    <div class="col">
+        <h5 class="primary_color">この銘柄とリスクが似ている銘柄</h5>
+        <div class="">
+            <table class="table">
+                    <thead>
+                    <tr>
+                        <th>会社名</th>
+                        <th>ファンド名</th>
+                        <th>リスク</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in risk_contents %}
+                        <tr>
+                            {% for row1, risk_id in i|zip:risk_urls %}
+                                {% if forloop.counter == 2 %}
+                                    <td><a href="../detail/{{ risk_id }}">{{ row1 }}</a></td>
+                                {% else %}
+                                    <td>{{ row1 }}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+            {% comment %} リターンが類似している銘柄情報一覧 {% endcomment %}
+        <div class="col">
+            <h5 class="primary_color">この銘柄とリターンが似ている銘柄</h5>
+            <div class="">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>会社名</th>
+                        <th>ファンド名</th>
+                        <th>リターン</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in return_contents %}
+                        <tr>
+                            {% for row1, return_id in i|zip:return_urls %}
+                                {% if forloop.counter == 2 %}
+                                    <td><a href="../detail/{{ return_id }}">{{ row1 }}</a></td>
+                                {% else %}
+                                    <td>{{ row1 }}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+            <div class="">
+            <h5 class="primary_color">この銘柄を買っている人はこんな銘柄も買っています</h5>
+            <div class="">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ファンド名</th>
+                        <th>リターン</th>
+                        <th>リスク</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for fund in popular_user_funds %}
+                        <tr>
+                            <th>
+                                <a href=" /fund/detail/{{ fund.id }} ">{{ fund.fund_name }}</a>
+                            </th>
+                            <th>{{ fund.return_percent }}</th>
+                            <th>{{ fund.risk }}</th>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="modal-overlay">
+        <form action="{% url "fund:register_portfolio" %}" method="POST" 
+            class="d-flex align-items-center">
+            {% csrf_token %}
+            <div id="modal-content" >
+                <label class="modal-content-child" value="">保有金額</label>
+                <input class="modal-content-child" type="number" id="amount_form" name="amount_form" value=1 min=1 >
+                <button class="modal-content-child btn btn-primary my-1" type="submit">追加</button>
+                <button class="modal-content-child btn btn-primary my-1" type="reset" onClick="hideModal()">閉じる</button>
+                <input type="hidden" name="fund_id" value="{{ fund_id }}">
+                <input type="hidden" name="page" value="detail">
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        setTimeout("$('.alert').fadeOut('slow')", 2000)
+    })
+    function hideModal(){
+        $('#modal-overlay').fadeOut();
+    }
+</script>
+</section>
+{% endblock %}

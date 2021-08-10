@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block contents %}
+
+<div class="result-title container-fluid">
+    <h1 align='center'>あなたの投資傾向は……? </h1>
+</div>
+<div class="result-box container-fluid">
+    <h2 align='center'>価格変動リスクの許容度: {{ risk_class }}</h2>
+    <h2 align='center'>投資期間: {{ term_class }}</h2>
+</div>
+<div class="result_related container">
+    <div class="row align-items-center justify-content-center">
+        <div class="col result_img">
+            <h3 class="risk_term_matrix">
+                {# With filter will temporary assign something to variable and add filter is built-in filter for sum up vars. #}
+                {% with '/question/'|add:img_pos|add:'.jpg' as img_src %}
+                <img class="img-fluid" src="{% static img_src %}" alt="{{ img_pos }}">
+                {% endwith %}
+            </h3>
+        </div>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="row align-items-center justify-content-center">
+        <div class="col" align='center'>
+            <a href="{% url 'top:top_page' %}" class="btn btn-success" role="button">トップページへ</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="row align-items-center justify-content-center">
+        <div class="col" align='center'>
+            アカウント作成してもっと投資を知る!
+            <br>
+            {# https://django-allauth.readthedocs.io/en/latest/views.html view reverse from accounts_signup #}
+            <a href="{% url 'account_signup' %}" class="btn btn-primary" role="button">【無料】新規登録♪</a>
+        </div>
+    </div>
+    <div class="row mt-2 align-items-center justify-content-center">
+        <div class="col" align='center'>
+            {# https://django-allauth.readthedocs.io/en/latest/views.html view reverse from accounts_signup #}
+            もしくは<a href="{% url 'account_login' %}" class="btn btn-info" role="button">ログイン</a>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

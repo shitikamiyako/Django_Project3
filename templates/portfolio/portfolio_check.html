@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% block contents %}
+{% load extra_filter %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <p class="h3 pt-5 pl-2 pb-2 border-bottom">あなたのポートフォリオ</p>
+      <section>
+        <table class="table-bordered">
+          <tr style="font-size:13px;color:#57A99A;background-color: #E5E5E5;text-align: center;">
+            <th width="140">ファンド名</th>
+            <th width="90">会社名</th>
+            <th width="100">カテゴリー</th>
+            <th width="90">総合<br>レーティング</th>
+            <th width="70">リターン<br>(万円)</th>
+            <th width="70">リスク<br>(万円)</th>
+            <th width="70">保有金額<br>(万円)</th>
+            <th width="70">ポートフォリオ<br>から</th>
+          </tr>
+          {% for analyzed_list, fund in analyzed_lists|zip:my_funds%}
+          {% for info in fund %}
+          <tr style="font-size: 11px;text-align: center;">
+            <td><a href="/fund/detail/{{ info.id }}">{{ info.fund_name }}</a></td>
+            <td>{{ info.company }}</td>
+            <td>{{ analyzed_list.category }}</td>
+            <td>{{ info.rate|floatformat:0 }}</td>
+            <td>{{ analyzed_list.return_value|floatformat:0}}</td>
+            <td>{{ analyzed_list.risk|floatformat:0 }}</td>
+            <td>{{ analyzed_list.amount|floatformat:0 }}</td>
+            <td><button onclick="location.href='/fund/delete_portfolio/{{ info.id }}'"
+                class="btn my-1 btn-pad" style="background-color:#57A99A; color:#FFF;">削除</button></td>
+          </tr>
+          {% endfor %}
+          {% endfor %}
+        </table>
+      </section>
+    </div>
+    <div class="col-md-4">
+
+      <div>
+        <p class="h3 pt-5 pl-2 pb-2 border-bottom">ポートフォリオ分析</p>
+        <canvas id="myRaderChart"></canvas>
+        <!-- CDN -->
+        　
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+
+        <script>
+          var ctx = document.getElementById("myRaderChart");
+          var total_risk = {{ total_risk }};
+          var total_return = {{ total_return }};
+          var rate = {{ summary.rate }} * 20;
+          var category_num = {{ summary.category_num }} * 2;
+          var myRadarChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+              labels: ["risk", "return", "rate", "category"],
+              datasets: [{
+                label: 'My Portfolio',
+                data: [total_risk, total_return, rate, category_num],
+                backgroundColor: 'RGBA(161,239,178, 1)',
+                borderColor: 'RGBA(161,239,178, 1)',
+                borderWidth: 1,
+                pointRadius: 0
+              }]
+            },
+            options: {
+              title: {
+                display: true,
+                text: 'My Portfolio'
+              },
+              legend: {
+                display: false
+              },
+              scale: {
+                ticks: {
+                  display: false,
+                  suggestedMin: 0,
+                  suggestedMax: 100,
+                  stepSize: 100,
+                }
+              }
+            }
+          });
+        </script>
+        <br>
+        ■リターン%<br>
+        {{total_return|floatformat:0}}
+        <div>
+          <canvas id="return_chart"></canvas>
+        </div>
+
+        <script>
+          var ctx = document.getElementById('return_chart');
+          var ex_chart = new Chart(ctx, {
+            type: 'horizontalBar',
+            data: {
+              datasets: [{
+                data: [{{ total_return }}],
+              backgroundColor: 'RGBA(161,239,178, 1)',
+            }]
+          },
+            options: {
+            responsive: true,
+            legend: {
+              display: false
+            },
+            scales: {
+              yAxes: [{
+                barThickness: 30,
+              }],
+              xAxes: [{
+                ticks:
+                {
+                  min: 0,
+                  max: 100
+                }
+              }]
+            }
+          }
+  });
+        </script>
+        <br>
+        ■リスク%<br>
+        {{total_risk|floatformat:0}}<br>
+        <div>
+          <canvas id="risk_chart"></canvas>
+          <script>
+            var ctx = document.getElementById('risk_chart');
+            var ex_chart = new Chart(ctx, {
+              type: 'horizontalBar',
+              data: {
+                datasets: [{
+                  data: [total_risk],
+                  backgroundColor: 'RGBA(161,239,178, 1)',
+                }]
+              },
+              options: {
+                responsive: true,
+                legend: {
+                  display: false
+                },
+                scales: {
+                  yAxes: [{
+                    barThickness: 30,
+                  }],
+                  xAxes: [{
+                    ticks:
+                    {
+                      min: 0,
+                      max: 100
+                    }
+                  }]
+                }
+              }
+            });
+          </script>
+        </div>
+
+        ■総合レート(総合レーティング平均)<br>
+        {{summary.rate}}<br>
+        <div>
+          <canvas id="rate_chart"></canvas>
+          <script>
+            var ctx = document.getElementById('rate_chart');
+            var ex_chart = new Chart(ctx, {
+              type: 'horizontalBar',
+              data: {
+                datasets: [{
+                  data: [{{ summary.rate }}],
+                backgroundColor: 'RGBA(161,239,178, 1)',
+              }]
+            },
+              options: {
+              responsive: true,
+              legend: {
+                display: false
+              },
+              scales: {
+                yAxes: [{
+                  barThickness: 30,
+                }],
+                xAxes: [{
+                  ticks:
+                  {
+                    min: 0,
+                    max: 5
+                  }
+                }]
+              }
+            }
+    });
+          </script>
+        </div>
+
+        ■分散投資(カテゴリーの種類数)<br>
+        {{summary.category_num}}<br>
+        <div>
+          <canvas id="category_chart"></canvas>
+          <script>
+            var ctx = document.getElementById('category_chart');
+            var ex_chart = new Chart(ctx, {
+              type: 'horizontalBar',
+              data: {
+                datasets: [{
+                  data: [{{ summary.category_num }}],
+                backgroundColor: 'RGBA(161,239,178, 1)',
+              }]
+            },
+              options: {
+              responsive: true,
+              legend: {
+                display: false
+              },
+              scales: {
+                yAxes: [{
+                  barThickness: 30,
+                }],
+                xAxes: [{
+                  ticks:
+                  {
+                    min: 0,
+                    max: 5
+                  }
+                }]
+              }
+            }
+    });
+          </script>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}

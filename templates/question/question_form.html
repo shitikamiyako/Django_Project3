@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load extra_filter %}
+{% block contents%}
+{% include 'question/vue_loader.html' %}
+
+
+<div class="container-fluid">
+    <form action={% url "question:form" %} method="post">
+        {% csrf_token %}
+        {% for question, answer in question_list|zip:answer_list%}
+        <div class="question_text row border">
+            <div class="h3 p-2 bd-highlight">
+                {{ question.question }}
+            </div>
+        </div>
+        <div class="answer_choice row">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                {% for answer_option in answer %}
+                <label class="btn btn-primary btn-lg mt-1 mr-2 ">
+                    <input type="radio" name={{ question.id }} value={{ forloop.counter }} autocomplete="off">
+                    {{ answer_option.choice }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <hr class="continer mt-1">
+        {% endfor %}
+        <div class="row">
+            <input type=submit class="btn btn-success btn-lg mt-5" value="診断するっ!">
+            <input type=reset class="btn btn-info btn-lg mt-5 ml-3" value="やり直す。。。"
+        </div>
+    </form>
+</div>
+
+{% endblock %}

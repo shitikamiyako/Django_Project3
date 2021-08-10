@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/accounts.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/signup.css' %}">
+{% endblock %}
+
+
+
+{% block head_title %}アカウント作成{% endblock %}
+
+{% block contents %}
+<div class="row">
+  <div class="col-md-6 md-offset-3 mx-auto">
+    <h3>アカウント作成</h3>
+
+    <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+      {% csrf_token %}
+
+      {% for field in form %}
+
+
+      <div class="form-group field">
+      {{ field }}
+      {% if field.errors %}
+      <div class="alert-message">
+      {{ field.errors }}
+      </div>
+      {% endif %}
+    </div>
+
+      {% endfor %}
+
+
+      <!-- アラートメッセージの表示-->
+
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+
+      <button type="submit" class="btn-block btn btn-lg btn-primary">登録</button>
+      <p class="signup-p">ログインは <a href="{{ login_url }}">こちらから</a></p>
+    </form>
+  </div>
+</div>
+{% endblock %}

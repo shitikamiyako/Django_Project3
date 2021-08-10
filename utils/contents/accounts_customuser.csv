@@ -1,0 +1,5 @@
+,id,password,username,age,sex,admin,is_active,is_staff,is_superuser,last_login,email
+0,1,,temp,,,,1,0,0,,
+1,2,admin,admin,,,1.0,1,0,0,,
+2,3,pass,pass,,,,1,0,0,,
+3,4,pbkdf2_sha256$150000$Wg8l2vDIoTMG$GlHPcoxgH8bPCqQnn77CxrSuZEVzi4VJm+1SuqCQP2M=,pettan,,,,1,0,0,2020-06-14 15:23:18.526145,pettan0818@gmail.com

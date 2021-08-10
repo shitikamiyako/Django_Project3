@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='slim' %}
+{% load static %}
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cccabinet.jpn.org/bootstrap4/css/style.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/base.css' %}">
+    <!-- Font Awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ" crossorigin="anonymous"></script>
+
+    <title>Early Morning Star</title>
+
+    {% block extra_css %}{% endblock %}
+
+</head>
+
+  <body>
+    <!-- ↓↓１番上のナビゲーションバー↓↓ -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <nav class="navbar navbar-expand fixed-top navbar-dark bs-navbar" style='background-color:cadetblue;' id="bs-navbar">
+            {% if user.is_authenticated %}
+            <a class="navbar-brand mr-md-2" href="/top">
+            {% else %}
+            <a class="navbar-brand mr-md-2" href="/landing">
+            {% endif %}
+              <img width="200" src="{% static 'images/logo.png' %}">
+            </a>
+            {% if user.is_authenticated %}
+            <!-- 検索フォーム -->
+            <form action="{% url 'fund:fund_list' %}" method="POST" class="ml-3 mr-auto align-items-center">
+                {% csrf_token %}
+                <div class="input-group rounded-pill bg-white p-1">
+                  <input type="hidden" name="category_list" value="すべて">
+                  <input class="form-control input-sm rounded-pill border-0 p-0 m-0" name="query" type="text" placeholder="銘柄を検索">
+                  <span class="input-group-btn">
+                    <button type="submit" class="border-0 rounded-pill bg-white"><i class="fas fa-search"></i></button>
+                  </span>
+                </div>
+            </form>
+            {% endif %}
+
+            <!-- ナビゲーションアイテム -->
+            <ul class="navbar-nav ml-auto">
+              {% if user.is_authenticated %}
+              <!-- ログイン時メュー -->
+              <li class="nav-item list-inline-item d-none d-lg-flex">
+                <a class="nav-link text-dark text-center" href="/portfolio/check" >ポートフォリオ</a>
+              </li>
+              <li class="nav-item list-inline-item d-none d-lg-flex">
+                <a class="nav-link text-dark text-center" href="/fund/search" >銘柄一覧</a>
+              </li>
+              <!-- ここからドロップダウン -->
+              <li class="nav-item dropleft">
+                  <a href="#" class="nav-link text-dark" data-toggle="dropdown" data-flip="true" role="button" aria-haspopup="true" aria-expanded="true"><i class="fas fa-bars"></i><a>
+                  <div class="dropdown-menu">
+                    <a class="nav-link dropdown-item text-dark d-flex d-lg-none" href="/portfolio/check" >
+                      <i class="far fa-file-alt"></i>
+                      <span class="px-1">ポートフォリオ</span>
+                    </a>
+                    <a class="nav-link dropdown-item text-dark d-flex d-lg-none" href="/fund/search" >
+                      <i class="fas fa-search"></i>
+                      <span class="px-1">銘柄一覧</span>
+                    </a>
+                    <a class="nav-link dropdown-item text-dark" href="/question/form" >
+                      <i class="far fa-file-alt"></i>
+                      <span class="px-1">自己分析</span>
+                    </a>
+                    <a class="nav-link dropdown-item text-dark" href="/accounts/logout" >
+                      <i class="fas fa-sign-out-alt"></i>
+                      <span class="px-1">ログアウト</span>
+                    </a>
+                  </div>
+              </li>
+              <!-- ドロップダウンここまで -->
+              {% else %}
+              <!-- 非ログイン時メュー -->
+              <li class="nav-item"><a class="nav-link text-dark block text-center h-auto" href="/accounts/signup" >アカウント作成</a></li>
+              <li class="nav-item"><a class="nav-link text-dark block text-center h-auto" href="/accounts/login" >ログイン</a></li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- 「コンテンツ本体部分」 -->
+    <div class="container">
+      <div class="row">
+        <!-- ↓↓コンテンツ本体↓↓ -->
+        <div class="col-12">
+          {% block contents %}
+          {% endblock %}
+        </div>
+        <!-- ↑↑コンテンツ本体ここまで↑↑ -->
+      </div>
+    </div>
+  </body>
+</html>

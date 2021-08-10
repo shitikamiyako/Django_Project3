@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+<div class="container">
+
+    <!-- 運営からの連絡欄 -->
+    <div class="row">
+        <div class="col-12 col-lg-10 mx-auto">
+            <p class="h3 pt-5 pl-2 pb-2 border-bottom" style="color:cadetblue;">運営からのお知らせ</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-10 mx-auto">
+            <ul>
+                {% for info in infomations %}
+                <li class="pt-3">
+                    <p class="h4 text-info">{{ info.title }} <small>({{ info.datetime }})</small></p>
+                    <div class="text-dark">{{ info.contents }}</div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- 人気の銘柄欄 -->
+    <div class="row">
+        <div class="col-12 col-lg-10 mx-auto">
+            <p class="h3 pt-5 pl-2 pb-2 border-bottom" style="color:cadetblue;">人気の銘柄</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-10 mx-auto">
+            <ul>
+                {% for fund in popular_funds %}
+                <li class="pt-3">
+                    <a class="h4 text-primary" href="/fund/detail/{{ fund.id }}">{{ fund.fund_name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- よく見られている銘柄欄 -->
+    <div class="row">
+        <div class="col-12 col-lg-10 mx-auto">
+            <p class="h3 pt-5 pl-2 pb-2 border-bottom" style="color:cadetblue;">よく見られている銘柄</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-10 mx-auto">
+            <ul>
+                {% for fund in often_seen_funds %}
+                <li class="pt-3">
+                    <a class="h4 text-primary" href="/fund/detail/{{ fund.id }}">{{ fund.fund_name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

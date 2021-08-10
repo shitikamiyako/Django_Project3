@@ -1,0 +1,60 @@
+#modal-content{
+	width:50%;
+	margin:20em auto 0;
+	padding:20px 20px;
+	background:#fff;
+    z-index:2;
+}
+ 
+.modal-content-child{
+	margin:0 0 0 20px;
+}
+
+.btn-pad{
+	margin:0 0 0 40px;
+}
+
+.primary_color {
+	color: #57A99A;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #57A99A !important;
+    border: #57A99A !important;
+	color: white;
+}
+
+white_color_text {
+	color: white;
+}
+
+#modal-overlay{
+	z-index:1;
+	display:none;
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:120%;
+	background-color:rgba(0,0,0,0.75);
+}
+.end{
+	text-align: end;
+	padding: 0 10rem 0 0;
+}
+
+.page-item.active .page-link{
+	background-color: #57A99A !important;
+    border: #57A99A  !important;
+    color: white;
+}
+.page-item .page-link{
+    color: #57A99A;
+}
+
+.table th{
+	color: #57A99A
+}
+.table td{
+	padding: 0.2rem;
+}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contents %}
+<div class="container pt-5">
+    <div class="row">
+        <div class="col-12 col-lg-5 ml-lg-auto">
+            <div class="row">
+                <div class="col-12 py-3">
+                    <div class="h1">
+                        投資のキッカケは<br>
+                        楽しさの発見から生まれる。
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 py-3">
+                    <div class="h4 text-info">
+                        知識がなくても安心して投資を始められ、<br>
+                        利益を得るためのサポートを提供します。
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 py-3">
+                    <a href="/question/form" class="btn btn-link">
+                        <div class="rounded-lg p-3" style="background-color:lightgreen;">
+                            <span class="p-2 rounded-lg bg-info text-white">無料</span>
+                            <span class="h5 px-2 text-dark">まずは自分の投資タイプを知る。</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-5 mr-lg-auto">
+            <img src="{% static 'landing/images/landing.jpg' %}" alt="landing.jpg" class="img-fluid rounded-lg">
+        </div>
+    </div>
+</div>
+
+{% endblock %}

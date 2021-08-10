@@ -1,0 +1,26 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+flake8 = "*"
+pandas = "*"
+numpy = "*"
+mypy = "*"
+
+[packages]
+django = "==2.2"
+django-bootstrap4 = "*"
+pandas = "*"
+click = "*"
+numpy = "*"
+importlib-metadata = "*"
+bs4 = "*"
+requests = "*"
+django-allauth = "*"
+lxml = "*"
+
+[scripts]
+start = "python manage.py runserver"
+manage = "python manage.py"
